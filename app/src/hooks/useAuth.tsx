@@ -34,7 +34,15 @@ function saveCurrentUser(user: User | null) {
 }
 
 async function apiRequest(path: string, body: object) {
-  const response = await fetch(path, {
+  const API_BASE = (import.meta.env.VITE_API_BASE as string) || '';
+
+  function joinUrl(base: string, p: string) {
+    if (!base) return p;
+    return base.replace(/\/+$|$/, '') + '/' + p.replace(/^\/+/, '');
+  }
+
+  const url = joinUrl(API_BASE, path);
+  const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
